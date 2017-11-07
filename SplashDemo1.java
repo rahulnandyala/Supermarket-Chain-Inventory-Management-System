@@ -1,13 +1,18 @@
 import javax.swing.*;
 import java.net.URL;
 import java.awt.*;
+import java.sql.*;
 
 class DBPage extends javax.swing.JFrame {
-
+	Connection con;
     /**
      * Creates new form DBPage
      */
     public DBPage(String logoPath) {
+	try{
+		Class.forName("com.mysql.jdbc.Driver");
+		con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DBMSMiniPro", "<username>", "<password>");
+	}catch(Exception e){System.out.printf("\nSql Connection Error!!!: " + e);};
         initComponents(logoPath);
     }
 
@@ -697,11 +702,27 @@ class DBPage extends javax.swing.JFrame {
     private void jLabel9MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MousePressed
         // TODO add your handling code here:
         jTextArea1.setText("setText: 1");
+	/*try{
+	Statement stmt = con.createStatement();
+	ResultSet rs = stmt.executeQuery("select * from Student");
+	while(rs.next())
+	{
+		jTextArea1.append("\n" + rs.getString(1));
+	} 
+	}catch(Exception e){System.out.printf("\nFirst button error:");e.printStackTrace();}*/
     }//GEN-LAST:event_jLabel9MousePressed
 
     private void jLabel10MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MousePressed
         // TODO add your handling code here:
-        jTextArea1.setText("second setText: 2");
+        /*jTextArea1.setText("second setText: 2");
+	try{
+	Statement stmt = con.createStatement();
+	ResultSet rs = stmt.executeQuery("select Name from Student");
+	while(rs.next())
+	{
+		jTextArea1.append("\n" + rs.getString(1));
+	}
+	}catch(Exception e){System.out.printf("\nSecond button error:");e.printStackTrace();}*/
     }//GEN-LAST:event_jLabel10MousePressed
 
     private void jLabel12MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel12MousePressed
@@ -1129,13 +1150,13 @@ class SplashDemo1 extends JFrame{
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            //java.util.logging.Logger.getLogger(DGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            //java.util.logging.Logger.getLogger(DGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            //java.util.logging.Logger.getLogger(DGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            //java.util.logging.Logger.getLogger(DGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 		new SplashDemo1().setVisible(true);	
 	}
