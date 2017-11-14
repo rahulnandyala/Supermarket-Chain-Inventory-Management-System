@@ -4,14 +4,21 @@ import java.awt.*;
 import java.sql.*;
 
 class DBPage extends javax.swing.JFrame {
-	Connection con;
+
     /**
      * Creates new form DBPage
      */
-    public DBPage(String logoPath) {
+	Connection con;
+	int cid, bid, pid, did;
+    public DBPage(String logoPath, String company) {
 	try{
 		Class.forName("com.mysql.jdbc.Driver");
-		con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DBMSMiniPro", "<username>", "<password>");
+		con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DBMSMiniPro", "root", "iamrahul");
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("SELECT CID FROM COMPANY WHERE CNAME = \"" + company + "\"");
+		while(rs.next())
+			cid = rs.getInt(1);
+		System.out.printf("\nCID: %d", cid);
 	}catch(Exception e){System.out.printf("\nSql Connection Error!!!: " + e);};
         initComponents(logoPath);
     }
@@ -42,10 +49,9 @@ class DBPage extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox<>();
         jLabel14 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
@@ -211,6 +217,11 @@ class DBPage extends javax.swing.JFrame {
         jComboBox1.setBackground(java.awt.Color.white);
         jComboBox1.setFont(new java.awt.Font("URW Gothic L", 1, 15)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jLabel11.setFont(new java.awt.Font("URW Gothic L", 1, 15)); // NOI18N
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -219,7 +230,7 @@ class DBPage extends javax.swing.JFrame {
 
         jComboBox2.setBackground(java.awt.Color.white);
         jComboBox2.setFont(new java.awt.Font("URW Gothic L", 1, 15)); // NOI18N
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<NOTHING>" }));
 
         jLabel14.setFont(new java.awt.Font("URW Gothic L", 1, 15)); // NOI18N
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -234,22 +245,6 @@ class DBPage extends javax.swing.JFrame {
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jLabel14MouseEntered(evt);
-            }
-        });
-
-        jLabel19.setFont(new java.awt.Font("URW Gothic L", 1, 15)); // NOI18N
-        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel19.setText("STATUS OF DEPARTMENT");
-        jLabel19.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.white, java.awt.Color.black, java.awt.Color.black));
-        jLabel19.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jLabel19MousePressed(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                jLabel19MouseExited(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jLabel19MouseEntered(evt);
             }
         });
 
@@ -268,38 +263,43 @@ class DBPage extends javax.swing.JFrame {
                 jLabel20MouseEntered(evt);
             }
         });
-
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+	jScrollPane3.setBackground(java.awt.Color.white);
+        jScrollPane3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jTable1.setBackground(java.awt.Color.white);
+        jTable1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jTable1.setFont(new java.awt.Font("URW Gothic L", 0, 35)); // NOI18N
+        jTable1.setModel(new javax.swing.table.DefaultTableModel()
+        );
+	jTable1.setOpaque(false);
+        jTable1.setGridColor(java.awt.Color.white);
+        jScrollPane3.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(106, 106, 106)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(126, 126, 126)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(114, 114, 114)
+                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(126, 126, 126))
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(46, 46, 46)
+                .addGap(186, 186, 186)
                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(76, 76, 76)
-                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(66, 66, 66))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2)
+                .addComponent(jScrollPane3)
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -316,11 +316,12 @@ class DBPage extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
                 .addContainerGap())
+		//.addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                //.addContainerGap(408, Short.MAX_VALUE))
         );
 
         jPanel2.add(jPanel5, "card4");
@@ -493,7 +494,7 @@ class DBPage extends javax.swing.JFrame {
                 .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel8.setBackground(java.awt.Color.white);
@@ -610,6 +611,28 @@ class DBPage extends javax.swing.JFrame {
         jPanel2.add(jPanel5);
         jPanel2.repaint();
         jPanel2.revalidate();
+	try{
+		jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<NOTHING>" }));
+		jTable1.setModel(new javax.swing.table.DefaultTableModel());
+		Statement stmt = con.createStatement();
+		ResultSet rs =  stmt.executeQuery("select count(*) from BRANCHES where CID = "+ cid);
+		int len = 0;
+		while(rs.next())
+		{
+			len = rs.getInt(1);
+			System.out.printf("\nNo. of branches: %d", len);
+		}
+		rs = stmt.executeQuery("select LOC from BRANCHES where CID = "+ cid);
+		String[] str = new String[len+1];
+		str[0] = "<CHOOSE>";
+		int i = 1;
+		while(rs.next())
+		{
+			str[i++] = rs.getString(1);
+			System.out.printf("\nBranch i: %s", str[i-1]);
+		}
+		jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(str));
+	}catch(Exception e){System.out.printf("\nSql Connection Error!!!: " + e);};
     }//GEN-LAST:event_jLabel2MousePressed
 
     private void jLabel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MousePressed
@@ -701,58 +724,203 @@ class DBPage extends javax.swing.JFrame {
 
     private void jLabel9MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MousePressed
         // TODO add your handling code here:
-        jTextArea1.setText("setText: 1");
-	/*try{
-	Statement stmt = con.createStatement();
-	ResultSet rs = stmt.executeQuery("select * from Student");
-	while(rs.next())
-	{
-		jTextArea1.append("\n" + rs.getString(1));
-	} 
-	}catch(Exception e){System.out.printf("\nFirst button error:");e.printStackTrace();}*/
+        //jTextArea1.setText("setText: 1");
+	jTextArea1.setFont(new java.awt.Font("URW Gothic L", 0, 18));
+	try{
+		Statement stmt = con.createStatement();
+		ResultSet rs ; 
+		//stmt.executeUpdate("DROP VIEW VIEW1");
+		stmt.executeUpdate("CREATE VIEW VIEW1 AS (SELECT BID, SUM(TOTAL_PRICE) AS TOTAL FROM PRODUCT_SOLD WHERE CID = "+cid+" GROUP BY BID)");
+		rs = stmt.executeQuery("SELECT BID, TOTAL FROM VIEW1 WHERE TOTAL IN (SELECT MAX(TOTAL) FROM VIEW1)");
+		int biD = 0;
+		int total = 0;
+		String loc = "";
+		while(rs.next())
+		{
+			biD = rs.getInt(1);
+			total = rs.getInt(2);
+		}
+		rs = stmt.executeQuery("SELECT LOC FROM BRANCHES WHERE BID = "+biD+" AND CID = "+cid);
+		while(rs.next())
+		{
+			loc = rs.getString(1);
+		}
+		stmt.executeUpdate("DROP VIEW VIEW1");
+		jTextArea1.setText("The Branch with ID "+biD+" and name "+loc+" is the MAXIMUM selling Branch.\n\nIt has a Total sale of "+total);
+	}catch(Exception e){System.out.printf("\nSql Connection ErrorjLabel9!!!: " + e);};
     }//GEN-LAST:event_jLabel9MousePressed
 
     private void jLabel10MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MousePressed
         // TODO add your handling code here:
-        /*jTextArea1.setText("second setText: 2");
+        //jTextArea1.setText("second setText: 2");
+	jTextArea1.setFont(new java.awt.Font("URW Gothic L", 0, 18));
 	try{
-	Statement stmt = con.createStatement();
-	ResultSet rs = stmt.executeQuery("select Name from Student");
-	while(rs.next())
-	{
-		jTextArea1.append("\n" + rs.getString(1));
-	}
-	}catch(Exception e){System.out.printf("\nSecond button error:");e.printStackTrace();}*/
+		Statement stmt = con.createStatement();
+		ResultSet rs ; 
+		stmt.executeUpdate("CREATE VIEW VIEW1 AS (SELECT DID, SUM(TOTAL_PRICE) AS TOTAL FROM PRODUCT_SOLD WHERE CID = "+cid+" GROUP BY DID)");
+		rs = stmt.executeQuery("SELECT DID, TOTAL FROM VIEW1 WHERE TOTAL IN (SELECT MAX(TOTAL) FROM VIEW1)");
+		int diD = 0;
+		int total = 0;
+		String dname = "";
+		while(rs.next())
+		{
+			diD = rs.getInt(1);
+			total = rs.getInt(2);
+		}
+		rs = stmt.executeQuery("SELECT DNAME FROM DEPARTMENT WHERE DID = "+diD+" AND CID = "+cid);
+		while(rs.next())
+		{
+			dname = rs.getString(1);
+		}
+		stmt.executeUpdate("DROP VIEW VIEW1");
+		jTextArea1.setText("The Department with ID "+diD+" and name "+dname+" is the MAXIMUM selling Department.\n\nIt has a Total sale of "+total);
+	}catch(Exception e){System.out.printf("\nSql Connection ErrorjLabel10!!!: " + e);};
     }//GEN-LAST:event_jLabel10MousePressed
 
     private void jLabel12MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel12MousePressed
         // TODO add your handling code here:
-        String str;
-        str = "firstline";
-        str += "\nsecondline";
-        jTextArea1.setText(str);
+	jTextArea1.setFont(new java.awt.Font("URW Gothic L", 0, 18));
+        try{
+		Statement stmt = con.createStatement();
+		ResultSet rs ; 
+		stmt.executeUpdate("CREATE VIEW VIEW1 AS (SELECT BID, SUM(TOTAL_PRICE) AS TOTAL FROM PRODUCT_SOLD WHERE CID = "+cid+" GROUP BY BID)");
+		rs = stmt.executeQuery("SELECT BID, TOTAL FROM VIEW1 WHERE TOTAL IN (SELECT MIN(TOTAL) FROM VIEW1)");
+		int biD = 0;
+		int total = 0;
+		String loc = "";
+		while(rs.next())
+		{
+			biD = rs.getInt(1);
+			total = rs.getInt(2);
+		}
+		rs = stmt.executeQuery("SELECT LOC FROM BRANCHES WHERE BID = "+biD+" AND CID = "+cid);
+		while(rs.next())
+		{
+			loc = rs.getString(1);
+		}
+		stmt.executeUpdate("DROP VIEW VIEW1");
+		jTextArea1.setText("The Branch with ID "+biD+" and name "+loc+" is the MINIMUM selling Branch.\n\nIt has a Total sale of "+total);
+	}catch(Exception e){System.out.printf("\nSql Connection Error!!!: " + e);};
     }//GEN-LAST:event_jLabel12MousePressed
 
     private void jLabel13MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel13MousePressed
-        // TODO add your handling code here:
-        jTextArea1.setText("firstLIne");
-        jTextArea1.append("\nappending second line");
+        // TODO add your handling code here:	
+	jTextArea1.setFont(new java.awt.Font("URW Gothic L", 0, 18));
+        try{
+		Statement stmt = con.createStatement();
+		ResultSet rs ; 
+		stmt.executeUpdate("CREATE VIEW VIEW1 AS (SELECT DID, SUM(TOTAL_PRICE) AS TOTAL FROM PRODUCT_SOLD WHERE CID = "+cid+" GROUP BY DID)");
+		rs = stmt.executeQuery("SELECT DID, TOTAL FROM VIEW1 WHERE TOTAL IN (SELECT MIN(TOTAL) FROM VIEW1)");
+		int diD = 0;
+		int total = 0;
+		String dname = "";
+		while(rs.next())
+		{
+			diD = rs.getInt(1);
+			total = rs.getInt(2);
+		}
+		rs = stmt.executeQuery("SELECT DNAME FROM DEPARTMENT WHERE DID = "+diD+" AND CID = "+cid);
+		while(rs.next())
+		{
+			dname = rs.getString(1);
+		}
+		stmt.executeUpdate("DROP VIEW VIEW1");
+		jTextArea1.setText("The Department with ID "+diD+" and name "+dname+" is the MINIMUM selling Department.\n\nIt has a Total sale of "+total);
+	}catch(Exception e){System.out.printf("\nSql Connection Error!!!: " + e);};
     }//GEN-LAST:event_jLabel13MousePressed
 
     private void jLabel15MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel15MousePressed
         // TODO add your handling code here:
+	jTextArea1.setFont(new java.awt.Font("URW Gothic L", 0, 18));
+	try{
+		Statement stmt = con.createStatement();
+		ResultSet rs ; 
+		stmt.executeUpdate("CREATE VIEW VIEW1 AS (SELECT PID, SUM(TOTAL_PRICE) AS TOTAL FROM PRODUCT_SOLD WHERE CID = "+cid+" GROUP BY PID)");
+		rs = stmt.executeQuery("SELECT PID, TOTAL FROM VIEW1 WHERE TOTAL IN (SELECT MAX(TOTAL) FROM VIEW1)");
+		int piD = 0;
+		int total = 0;
+		String pname = "";
+		while(rs.next())
+		{
+			piD = rs.getInt(1);
+			total = rs.getInt(2);
+		}
+		rs = stmt.executeQuery("SELECT PRODUCT_NAME FROM PRODUCT WHERE PID = "+piD+" AND CID = "+cid);
+		while(rs.next())
+		{
+			pname = rs.getString(1);
+		}
+		stmt.executeUpdate("DROP VIEW VIEW1");
+		jTextArea1.setText("The Product with ID "+piD+" and name "+pname+" is the MAXIMUM selling Product.\n\nIt has a Total sale of "+total);
+	}catch(Exception e){System.out.printf("\nSql Connection Error!!!: " + e);};
     }//GEN-LAST:event_jLabel15MousePressed
 
     private void jLabel16MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel16MousePressed
         // TODO add your handling code here:
+	jTextArea1.setFont(new java.awt.Font("URW Gothic L", 0, 18));
+	try{
+		Statement stmt = con.createStatement();
+		ResultSet rs ; 
+		stmt.executeUpdate("CREATE VIEW VIEW1 AS (SELECT PID, SUM(TOTAL_PRICE) AS TOTAL FROM PRODUCT_SOLD WHERE CID = "+cid+" GROUP BY PID)");
+		rs = stmt.executeQuery("SELECT PID, TOTAL FROM VIEW1 WHERE TOTAL IN (SELECT MIN(TOTAL) FROM VIEW1)");
+		int piD = 0;
+		int total = 0;
+		String pname = "";
+		while(rs.next())
+		{
+			piD = rs.getInt(1);
+			total = rs.getInt(2);
+		}
+		rs = stmt.executeQuery("SELECT PRODUCT_NAME FROM PRODUCT WHERE PID = "+piD+" AND CID = "+cid);
+		while(rs.next())
+		{
+			pname = rs.getString(1);
+		}
+		stmt.executeUpdate("DROP VIEW VIEW1");
+		jTextArea1.setText("The Product with ID "+piD+" and name "+pname+" is the MINIMUM selling Product.\n\nIt has a Total sale of "+total);
+	}catch(Exception e){System.out.printf("\nSql Connection Error!!!: " + e);};
     }//GEN-LAST:event_jLabel16MousePressed
 
     private void jLabel17MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel17MousePressed
         // TODO add your handling code here:
+	try{
+		Statement stmt = con.createStatement();
+		ResultSet rs ; 
+		rs = stmt.executeQuery("SELECT PS.CID, PS.PID, PS.DID, P.PRODUCT_NAME, SUM(PS.TOTAL_PRICE) FROM PRODUCT_SOLD PS, PRODUCT P WHERE P.PID = PS.PID AND PS.CID = P.CID AND P.DID = PS.DID AND PS.BID = P.BID AND PS.CID = "+cid+" AND P.CID ="+cid+" GROUP BY PS.CID, PS.PID, PS.DID, P.PRODUCT_NAME");
+		int piD = 0;
+		int total = 0;
+		String pname = "";
+		jTextArea1.setFont(new java.awt.Font("URW Gothic L", 0, 18));
+		jTextArea1.setText("");
+		while(rs.next())
+		{
+			piD = rs.getInt(2);
+			pname = rs.getString(4);
+			total = rs.getInt(5);
+			jTextArea1.append("\nThe Product with name "+pname+" has a Total sale of "+total);
+		}
+	}catch(Exception e){System.out.printf("\nSql Connection Error!!!: " + e);};
     }//GEN-LAST:event_jLabel17MousePressed
 
     private void jLabel18MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel18MousePressed
         // TODO add your handling code here:
+	try{
+		Statement stmt = con.createStatement();
+		ResultSet rs ; 
+		rs = stmt.executeQuery("SELECT PS.CID, PS.PID, PS.DID, P.PRODUCT_NAME, SUM(PS.TOTAL_PRICE_EXPIRED) FROM PRODUCT_SOLD PS, PRODUCT P WHERE P.PID = PS.PID AND PS.CID = P.CID AND P.DID = PS.DID AND PS.BID = P.BID AND PS.CID = "+cid+" AND P.CID ="+cid+" GROUP BY PS.CID, PS.PID, PS.DID, P.PRODUCT_NAME");
+		int piD = 0;
+		int total = 0;
+		String pname = "";
+		jTextArea1.setFont(new java.awt.Font("URW Gothic L", 0, 18));
+		jTextArea1.setText("");
+		while(rs.next())
+		{
+			piD = rs.getInt(2);
+			pname = rs.getString(4);
+			total = rs.getInt(5);
+			jTextArea1.append("\nThe Product with name "+pname+" has a Total sale of "+total);
+		}
+	}catch(Exception e){System.out.printf("\nSql Connection Error!!!: " + e);};
     }//GEN-LAST:event_jLabel18MousePressed
 
     private void jLabel14MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel14MouseEntered
@@ -764,16 +932,6 @@ class DBPage extends javax.swing.JFrame {
         // TODO add your handling code here:
         jLabel14.setForeground(Color.BLACK);
     }//GEN-LAST:event_jLabel14MouseExited
-
-    private void jLabel19MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel19MouseEntered
-        // TODO add your handling code here:
-        jLabel19.setForeground(Color.GRAY);
-    }//GEN-LAST:event_jLabel19MouseEntered
-
-    private void jLabel19MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel19MouseExited
-        // TODO add your handling code here:
-        jLabel19.setForeground(Color.BLACK);
-    }//GEN-LAST:event_jLabel19MouseExited
 
     private void jLabel20MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel20MouseEntered
         // TODO add your handling code here:
@@ -787,19 +945,141 @@ class DBPage extends javax.swing.JFrame {
 
     private void jLabel14MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel14MousePressed
         // TODO add your handling code here:
+	try{
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("select PRODUCT_NAME, QUANTITY FROM PRODUCT WHERE BID = "+bid+" AND CID ="+ cid);
+		//jTextArea2.setText("");		
+		
+		ResultSetMetaData rsmd = rs.getMetaData();
+		javax.swing.table.DefaultTableModel dtm = new javax.swing.table.DefaultTableModel(0, 0);
+		
+                // add header of the table
+		String header[] = new String[rsmd.getColumnCount()];
+		javax.swing.table.JTableHeader jth = jTable1.getTableHeader();
+		jth.setBackground(java.awt.Color.white);
+		for(int i=1;i<=rsmd.getColumnCount();i++)
+                {
+			//String header[] = new String[] { "USN", "Name", "Marks","Fav_Sub", "Email ID"};
+			header[i-1] = rsmd.getColumnName(i);
+		}
+                        // add header in table model     
+                dtm.setColumnIdentifiers(new String[]{"",""});
+                        //set model into the table object
+                jTable1.setModel(dtm);
+		Object obj[] = new Object[rsmd.getColumnCount()];
+		obj[0] = header[0];
+		obj[1] = header[1];
+		//jTable1.setTableHeader(null);
+		jTable1.setFont(new java.awt.Font("URW Gothic L", 0, 22));
+		dtm.addRow(obj);
+		dtm.addRow(new String[]{"",""});
+		jTable1.setFont(new java.awt.Font("URW Gothic L", 0, 15));
+                while(rs.next())
+                {
+		    for(int i=1; i<=rsmd.getColumnCount();i++)
+		    {
+			obj[i-1] = rs.getString(i);
+		    }
+                    dtm.addRow(obj);
+                }    
+		for(int i = 0; i<20;i++)
+			dtm.addRow(new String[]{"",""});
+		//jTable1.setTableHeader(null);
+	}catch(Exception e){System.out.printf("\nSql Connection Error!!!: " + e);e.printStackTrace();};
     }//GEN-LAST:event_jLabel14MousePressed
-
-    private void jLabel19MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel19MousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel19MousePressed
 
     private void jLabel20MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel20MousePressed
         // TODO add your handling code here:
+	try{
+		Statement stmt = con.createStatement();
+		ResultSet rs =  stmt.executeQuery("select DID from DEPARTMENT where DNAME = \""+ String.valueOf(jComboBox2.getSelectedItem())+"\"");
+		while(rs.next())
+		{
+			did = rs.getInt(1);
+			System.out.printf("\nDID: %d", did);
+		}
+		rs = stmt.executeQuery("select PRODUCT_NAME, QUANTITY FROM PRODUCT WHERE BID = "+bid+" AND CID ="+ cid+" AND DID = "+did);
+		//jTextArea2.setText("");		
+		
+		ResultSetMetaData rsmd = rs.getMetaData();
+		javax.swing.table.DefaultTableModel dtm = new javax.swing.table.DefaultTableModel(0, 0);
+		
+                // add header of the table
+		String header[] = new String[rsmd.getColumnCount()];
+		javax.swing.table.JTableHeader jth = jTable1.getTableHeader();
+		jth.setBackground(java.awt.Color.white);
+		for(int i=1;i<=rsmd.getColumnCount();i++)
+                {
+			//String header[] = new String[] { "USN", "Name", "Marks","Fav_Sub", "Email ID"};
+			header[i-1] = rsmd.getColumnName(i);
+		}
+                        // add header in table model     
+                dtm.setColumnIdentifiers(new String[]{"",""});
+                        //set model into the table object
+                jTable1.setModel(dtm);
+		Object obj[] = new Object[rsmd.getColumnCount()];
+		obj[0] = header[0];
+		obj[1] = header[1];
+		//jTable1.setTableHeader(null);
+		jTable1.setFont(new java.awt.Font("URW Gothic L", 0, 22));
+		dtm.addRow(obj);
+		dtm.addRow(new String[]{"",""});
+		jTable1.setFont(new java.awt.Font("URW Gothic L", 0, 15));
+                while(rs.next())
+                {
+		    for(int i=1; i<=rsmd.getColumnCount();i++)
+		    {
+			obj[i-1] = rs.getString(i);
+		    }
+                    dtm.addRow(obj);
+                }    
+		for(int i = 0; i<20;i++)
+			dtm.addRow(new String[]{"",""});
+		//jTable1.setTableHeader(null);
+	}catch(Exception e){System.out.printf("\nSql Connection Error!!!: " + e);e.printStackTrace();};
     }//GEN-LAST:event_jLabel20MousePressed
+   
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        // TODO add your handling code here:
+	System.out.printf("\nIN Action Performed Changed!!!");
+     try{
+	String selectedValue = String.valueOf(jComboBox1.getSelectedItem());
+	if( !selectedValue.equals("<CHOOSE>"))
+	{
+		Statement stmt = con.createStatement();
+		//bid = 0;
+		ResultSet rs = stmt.executeQuery("SELECT BID FROM BRANCHES WHERE LOC = \"" + selectedValue + "\"");
+		System.out.printf("\nSelectedValue: %s", selectedValue);
+		while(rs.next())
+			bid = rs.getInt(1);
+		System.out.printf("\nBID: %d", bid);
+		rs =  stmt.executeQuery("SELECT count(*) from DEPARTMENT where CID = "+cid+" and BID = "+ bid);
+
+		int len = 0;
+		while(rs.next())
+		{
+			len = rs.getInt(1);
+			System.out.printf("\nNo. of Departments: %d", len);
+		}
+		rs = stmt.executeQuery("select DNAME from DEPARTMENT where CID = "+ cid + " AND BID = " + bid);
+		String[] str = new String[len+1];
+		str[0] = "<CHOOSE>";
+		int i = 1;
+		while(rs.next())
+		{
+			str[i++] = rs.getString(1);
+			System.out.printf("\nDeaprtment i: %s", str[i-1]);
+		}
+		jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(str));		
+	}
+       }catch(Exception e){e.printStackTrace();}
+    }
 
     /**
      * @param args the command line arguments
      */
+   
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
@@ -813,7 +1093,6 @@ class DBPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
@@ -832,12 +1111,11 @@ class DBPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     // End of variables declaration//GEN-END:variables
 }
-
 class SplashDemo1 extends JFrame{
 	SplashDemo1() throws Exception
 	{
@@ -1067,19 +1345,19 @@ class SplashDemo1 extends JFrame{
     private void jLabel1MousePressed(java.awt.event.MouseEvent evt) {                                     
         // BIG BAZAAR
 	String logoPath = "/home/rahul/Downloads/bigbazaar-ConvertImage-ConvertImage.jpg";
-	new DBPage(logoPath).setVisible(true);
+	new DBPage(logoPath, "BigBazar").setVisible(true);
     }                                    
 
     private void jLabel2MousePressed(java.awt.event.MouseEvent evt) {                                     
         // SPAR
 	String logoPath= "/home/rahul/Downloads/SPAR-ConvertImage-ConvertImage-ConvertImage.jpg";
-	new DBPage(logoPath).setVisible(true);
+	new DBPage(logoPath, "Spar").setVisible(true);
     }                                    
 
     private void jLabel4MousePressed(java.awt.event.MouseEvent evt) {                                     
         // MORE STORE
 	String logoPath= "/home/rahul/Downloads/morelogo-ConvertImage-ConvertImage.png";
-	new DBPage(logoPath).setVisible(true);
+	new DBPage(logoPath, "More").setVisible(true);
     }                                    
 
     private void jPanel3MouseEntered(java.awt.event.MouseEvent evt) {                                     
