@@ -1495,6 +1495,43 @@ class DBPage extends javax.swing.JFrame {
 
     private void jLabel24MousePressed(java.awt.event.MouseEvent evt) {                                      
         // TODO add your handling code here:
+
+	try{
+		String ebid = String.valueOf(jComboBox3.getSelectedItem());
+		String edid = String.valueOf(jComboBox4.getSelectedItem());
+		String epid = jTextField1.getText();
+		String epname = jTextField4.getText();
+		String eexp = jTextField3.getText();
+		int did=0, bid=0;
+		if( epid != null)
+		{
+			Statement stmt = con.createStatement();
+			System.out.println("\nValues of bid, cid, did, pid"+ ebid+ cid +edid+epid);
+			ResultSet rs =  stmt.executeQuery("select BID from BRANCHES where LOC = \""+ ebid +"\" and CID = " + cid);
+			while(rs.next())
+			{
+				bid = rs.getInt(1);
+				System.out.printf("\nBID: %d", bid);
+			}
+			rs =  stmt.executeQuery("select DID from DEPARTMENT where DNAME = \""+ edid +"\" AND CID = "+cid+" AND BID = "+bid);
+			while(rs.next())
+			{
+				did = rs.getInt(1);
+				System.out.printf("\nDID: %d", did);
+				System.out.printf("\nCID: %d", cid);
+			}
+			
+			stmt.executeUpdate("INSERT INTO PRODUCT VALUES("+Integer.parseInt(epid)+", "+did+","+ bid+","+ cid+", \""+epname+"\",\'"+ eexp+"\', 50,20,200)");
+			
+		}
+	}catch(SQLException e) {
+		//if(e.getSQLState().equals(45000)){
+			JOptionPane.showInputDialog(new javax.swing.JFrame(), "err");
+			e.printStackTrace();
+
+		//}
+	
+	}
     }                                     
 
     private void jLabel26MouseEntered(java.awt.event.MouseEvent evt) {                                      
