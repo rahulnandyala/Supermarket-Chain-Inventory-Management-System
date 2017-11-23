@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.net.URL;
 import java.awt.*;
 import java.sql.*;
+import javax.swing.UIManager;
 //import java.util.*;
 
 class NewJFrame extends javax.swing.JFrame {
@@ -1495,7 +1496,7 @@ class DBPage extends javax.swing.JFrame {
 
     private void jLabel24MousePressed(java.awt.event.MouseEvent evt) {                                      
         // TODO add your handling code here:
-
+	
 	try{
 		String ebid = String.valueOf(jComboBox3.getSelectedItem());
 		String edid = String.valueOf(jComboBox4.getSelectedItem());
@@ -1524,9 +1525,11 @@ class DBPage extends javax.swing.JFrame {
 			stmt.executeUpdate("INSERT INTO PRODUCT VALUES("+Integer.parseInt(epid)+", "+did+","+ bid+","+ cid+", \""+epname+"\",\'"+ eexp+"\', 50,20,200)");
 			
 		}
+		
+		JOptionPane.showMessageDialog(null, "PRODUCT SUCCESSFULLY ADDED!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
 	}catch(SQLException e) {
 		//if(e.getSQLState().equals(45000)){
-			JOptionPane.showInputDialog(new javax.swing.JFrame(), "err");
+			JOptionPane.showMessageDialog(null, "PRODUCT ALREADY EXPIRED", "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 
 		//}
@@ -1546,6 +1549,68 @@ class DBPage extends javax.swing.JFrame {
 
     private void jLabel26MousePressed(java.awt.event.MouseEvent evt) {                                      
         // TODO add your handling code here:
+	try{
+		String ebid = String.valueOf(jComboBox3.getSelectedItem());
+		String edid = String.valueOf(jComboBox4.getSelectedItem());
+		String epid = jTextField1.getText();
+		String epname = jTextField4.getText();
+		String eexp = jTextField3.getText();
+		int did=0, bid=0;
+		if( epid != null)
+		{
+			Statement stmt = con.createStatement();
+			System.out.println("\nValues of bid, cid, did, pid"+ ebid+ cid +edid+epid);
+			ResultSet rs =  stmt.executeQuery("select BID from BRANCHES where LOC = \""+ ebid +"\" and CID = " + cid);
+			while(rs.next())
+			{
+				bid = rs.getInt(1);
+				System.out.printf("\nBID: %d", bid);
+			}
+			rs =  stmt.executeQuery("select DID from DEPARTMENT where DNAME = \""+ edid +"\" AND CID = "+cid+" AND BID = "+bid);
+			while(rs.next())
+			{
+				did = rs.getInt(1);
+				System.out.printf("\nDID: %d", did);
+				System.out.printf("\nCID: %d", cid);
+			}
+			rs = stmt.executeQuery("SELECT QUANTITY FROM PRODUCT WHERE PID = "+ Integer.parseInt(epid) +" AND CID = "+cid+" AND DID = "+did+" AND BID = "+bid);
+			System.out.printf("\nhere3");
+			int len = 0;
+			while(rs.next())
+			{
+				System.out.printf("\nhere3");
+				len = rs.getInt(1);
+				System.out.printf("\nQUANTITY IS: %d", len);
+			}
+			rs = stmt.executeQuery("SELECT MIN_QTY FROM PRODUCT WHERE PID = "+ Integer.parseInt(epid) +" AND CID = "+cid+" AND DID = "+did+" AND BID = "+bid);
+			System.out.printf("\nhere4");
+			int min_qty = 0;
+			while(rs.next())
+			{
+				System.out.printf("\nhere3");
+				min_qty = rs.getInt(1);
+				System.out.printf("\nmin_QUANTITY IS: %d", min_qty);
+			}
+			
+			stmt.executeUpdate("UPDATE PRODUCT SET QUANTITY="+(len-Integer.parseInt(String.valueOf(jComboBox5.getSelectedItem())))+" WHERE PID="+Integer.parseInt(epid)+" AND DID="+did+" AND BID="+ bid+" AND CID="+ cid+"");
+			if((len-Integer.parseInt(String.valueOf(jComboBox5.getSelectedItem())))<min_qty){
+				JOptionPane.showMessageDialog(null, "PRODUCT QUANTITY BELOW MIN !", "WARNING", JOptionPane.WARNING_MESSAGE);
+			}else {
+				JOptionPane.showMessageDialog(null, "PRODUCT QUANTITY SUCCESSFULLY DECREASED!", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+			
+		}
+		
+		
+	}catch(SQLException e) {
+		//if(e.getSQLState().equals(45000)){
+			JOptionPane.showMessageDialog(null, "ERROR", "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+
+		//}
+	
+	}
     }                            
 
     private void jComboBox5MouseEntered(java.awt.event.MouseEvent evt) {                                        
